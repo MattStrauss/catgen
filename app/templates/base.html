@@ -2,12 +2,12 @@
 <html>
 <head>
 	{% block head %}
-	{% if title %}	
-	<title>Flask Tailwind Starter Template - {{ title }}</title>
+	{% if title %}
+	<title>CatGen - {{ title }}</title>
 	{% else %}
-	<title>Flask Tailwind Starter Template</title>	
+	<title>CatGen</title>
 	{% endif %}
-	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/main.css') }}">
 	{% endblock %}
 	
@@ -39,8 +39,14 @@
 	{% endwith %}
 
 	<!-- Main app content here -->
+    <div>
+        <h1 class="bg-red-500 text-white uppercase tracking-wide px-6 py-2">Welcome to CatGen</h1>
+        <p class="bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2">
+            Automated Book Categorization/Genre Assignment through Machine Learning Technology
+        </p>
+    </div>
+
 	{% block content %}
-	
 	{% endblock %}
 	{% block scripts %}
 	<!-- Load Jquery from CDN -->
