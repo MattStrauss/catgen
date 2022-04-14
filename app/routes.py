@@ -33,20 +33,20 @@ def upload_file():
     # check if the post request has the title
     if title == '':
         error = True
-        flash('Please provide a title')
+        flash('Please provide a title', 'error')
     # check if the post request has the cover file and user
     # selected an actual file
     if 'cover' not in request.files:
         error = True
-        flash('Please provide a book cover')
+        flash('Please provide a book cover', 'error')
     file = request.files['cover']
     if file.filename == '':
         error = True
-        flash('Please provide a book cover')
+        flash('Please provide a book cover', 'error')
     if error:
         return redirect('/')
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        flash("Title and Cover Successfully Uploaded!")
+        flash("Title and Cover Successfully Uploaded!", 'success')
     return render_template('index.html')

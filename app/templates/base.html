@@ -22,7 +22,7 @@
     </div>
 
     <!-- Regular Message flashing -->
-	{% with messages = get_flashed_messages() %}
+	{% with messages = get_flashed_messages(category_filter=["success"]) %}
 	{% if messages %}
     <div class="px-24 pt-6 -pb-8">
         <div class="rounded-md bg-green-50 p-4">
