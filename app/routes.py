@@ -1,25 +1,18 @@
-import os, sys
-import datetime as dt
+import os
+
 from flask import (
     render_template,
-    url_for,
     redirect,
     request,
-    make_response,
-    abort,
-    jsonify,
-    session,
     flash)
-from app import app
-from app.helpers import *
-from app.forms import *
-from app.models import *
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '/uploads'
+from app import app
+
+UPLOAD_FOLDER = 'app/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 
 
 def allowed_file(filename):
@@ -55,4 +48,5 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash("Title and Cover Successfully Uploaded!")
     return render_template('index.html')
