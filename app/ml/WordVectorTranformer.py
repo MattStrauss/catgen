@@ -1,0 +1,18 @@
+import numpy as np
+import spacy
+from sklearn.base import BaseEstimator, TransformerMixin
+
+
+# https://lvngd.com/blog/spacy-word-vectors-as-features-in-scikit-learn/
+# transforms the csv of titles into 300 dimension word vectors
+# using the Spacy "en_core_web_lg" model
+class WordVectorTransformer(TransformerMixin, BaseEstimator):
+    def __init__(self, model="en_core_web_lg"):
+        self.model = model
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        nlp = spacy.load(self.model)
+        return np.concatenate([nlp(doc).vector.reshape(1, -1) for doc in X])
