@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from pandas import read_csv
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import euclidean_distances
 
 # Load dataset
 names = ['title', 'category']
@@ -19,15 +20,15 @@ for count, value in enumerate(dataset.category):
     # with category (int) as key
     if previous_category != value:
 
-        previous_category = value
-
         # avoid doing this on the first iter otherwise we get
         # key error (0)
         if value > 1:
             # save concatenated string to dict
-            category_words_dict[value - 1] = category_string
+            category_words_dict[previous_category] = category_string
             # reset string with first string of next category
             category_string = dataset.title[count]
+
+        previous_category = value
 
     else:
         # concatenate the title into the category
@@ -65,12 +66,15 @@ def cosine_similarity_func(title):
 
         cos = cosine_similarity(vectorized_title, vectorized_category)
 
-        print("Category: " + str(key) + " Cosine Similarity = " + str(cos))
+        euclid = euclidean_distances(vectorized_title, vectorized_category)
+
+        # print("Category: " + str(key) + " Cosine Similarity = " + str(cos))
+        print("Category: " + str(key) + " Euclidian Distance = " + str(euclid))
 
     return cos
 
 
 # test
 # returns
-cosine_similarity_func("Counting for Kids")
+cosine_similarity_func("Murder on the Orient Express")
 
