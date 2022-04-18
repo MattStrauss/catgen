@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from pandas import read_csv
 from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Load dataset
 names = ['title', 'category']
@@ -35,45 +36,44 @@ for count, value in enumerate(dataset.category):
 
 
 # https://www.machinelearningplus.com/nlp/cosine-similarity/
-def euclidian_distance_func(title, top_three=False):
+def cosine_similarity_func(title, top_three=False):
     """
     Input:
         A: a String which corresponds to a Title
     Output:
-        if 'maximum = false` (default) -> euclid_values_dict: dictionary representing the euclidian distance
-        of the Title in each Category. This is largely used for Testing with testing data
-        if 'maximum = true` -> return the int value of the maximum Category
-    euclid value interpretations
-        - the larger the value, the more likely the Title is to be in that category
+        if 'top_three = false` (default) -> cosine_values_dict: dictionary representing the
+        cosine similarity of the Title in each Category.
+        if 'top_three  = true` -> return the maximum three int values of cosine_values_dict.
+        (This is largely used for Testing)
+        - If they are the total opposite, meaning, A = -B, then you would get -1.
+        - If you get 0, that means that they are orthogonal (or perpendicular).
+        - Numbers between 0 and 1 indicate a similarity score.
+        - Numbers between -1 to 0 indicate a dissimilarity score.
     Concept:
-        I can't actually explain it at the moment, but after testing with cosine_similarity did
-        not yield good results. So, I used euclidian distance just to get an idea of what was going
-        wrong with the cosine_similarity, and it tuned out the maximum euclidian distance yields the
-        most accurate results. This doesn't quite make sense as it's counterintuitive, but we can think
-        on it for a while and figure out why this is happening?!?
+        Because the category strings are much larger than the Title, euclidian distance is not
+        appropriate in this case. But, cosine similarity is a good way to normalize the vectors
+        into a normalized unit where we can compare their projection angles into n-dimensional space
     """
 
     # turn the title into a numeric vector
     vectorized_title = vectorizer.fit_transform([title])
 
-    euclid_values_dict = {}
+    cosine_values_dict = {}
 
     for _, key in enumerate(category_words_dict):
         # turn the category string into a numeric vector
         vectorized_category = vectorizer.transform([category_words_dict[key]])
 
         # the returned results are a nested array, the [0][0] on the end gets just the value
-        euclid = euclidean_distances(vectorized_title, vectorized_category)[0][0]
+        cosine_val = cosine_similarity(vectorized_title, vectorized_category)[0][0]
 
-        euclid_values_dict[key] = euclid
-
-    # print("Category: " + str(key) + " Euclidian Distance = " + str(euclid))
+        cosine_values_dict[key] = cosine_val
 
     if top_three:
         # return top three
-        return sorted(euclid_values_dict, key=euclid_values_dict.get, reverse=True)[:3]
+        return sorted(cosine_values_dict, key=cosine_values_dict.get, reverse=True)[:3]
 
-    return euclid_values_dict
+    return cosine_values_dict
 
 
 # test
@@ -93,7 +93,7 @@ for index, row in dataset.iterrows():
     except ValueError:
         skip_count += 1
         continue
-    guess_categories = euclidian_distance_func(row.title, True)
+    guess_categories = cosine_similarity_func(row.title, True)
     print("Top three guessed categories: ")
     for i in guess_categories:
         print(i)
