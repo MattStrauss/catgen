@@ -9,6 +9,8 @@ from werkzeug.utils import secure_filename
 
 from app import app
 
+from app.ml.CountPattern import cosine_similarity_func
+
 UPLOAD_FOLDER = 'app/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -25,8 +27,11 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/submit', methods=['POST'])
+@app.route('/results', methods=['POST', 'GET'])
 def upload_file():
+
+    # the returned result
+    result = {}
     # get the submitted form data
     title = request.form.get('title')
     error = False
@@ -48,5 +53,11 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        flash("Title and Cover Successfully Uploaded!", 'success')
-    return render_template('index.html')
+        flash("Here are the results!", 'success')
+        result = cosine_similarity_func(title)
+    return render_template('results.html', result=result)
+
+
+@app.route('/results', methods=['GET'])
+def results():
+    return render_template('results.html')

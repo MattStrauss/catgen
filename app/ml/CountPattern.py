@@ -10,7 +10,7 @@ def load_data_set():
     """
 
     names = ['title', 'category']
-    dataset = read_csv('data/titles_categories.csv', names=names)
+    dataset = read_csv('app/ml/data/titles_categories.csv', names=names)
 
     category_words_dict = {}
 
