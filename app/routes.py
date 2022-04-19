@@ -1,3 +1,4 @@
+import json
 import os
 
 from flask import (
@@ -22,6 +23,24 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def combine_results_with_proper_keys(result_dict):
+    merged = {}
+
+    categories = {1: "Graphic Novels Anime-Manga, and Comics",
+                  2: "Transport, Travel, and Sport", 4: "Food and Drink", 5: "Home, Hobbies, and Crafts",
+                  6: "Computing and Video Games", 7: "Religion",
+                  8: "Literature, Poetry, and Plays", 9: "Humor", 10: "Language and Reference", 11: "Romance",
+                  12: "Biography", 13: "History",
+                  14: "Teen and Young Adult", 15: "Sci-Fi and Fantasy", 16: "Children",
+                  17: "Science, Psychology, and Self Help",
+                  18: "Crime, Mystery, and Thriller"}
+
+    for key, name in categories.items():
+        merged[name] = result_dict[key]
+
+    return merged
+
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -29,8 +48,7 @@ def index():
 
 @app.route('/results', methods=['POST', 'GET'])
 def upload_file():
-
-    # the returned result
+    # the returned result and categories list
     result = {}
     # get the submitted form data
     title = request.form.get('title')
@@ -55,9 +73,4 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash("Here are the results!", 'success')
         result = cosine_similarity_func(title)
-    return render_template('results.html', result=result)
-
-
-@app.route('/results', methods=['GET'])
-def results():
-    return render_template('results.html')
+    return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)))
