@@ -1,42 +1,47 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from pandas import read_csv
-from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Load dataset
-names = ['title', 'category']
-dataset = read_csv('data/titles_categories.csv', names=names)
 
-# https://towardsdatascience.com/basics-of-countvectorizer-e26677900f9c
-vectorizer = CountVectorizer(stop_words='english', max_df=1)
-category_words_dict = {}
+def load_data_set():
+    """
+    combine the titles from each category into a single string
+    :return: dictionary of category strings
+    """
 
-# combine the titles from each category into a single string
-previous_category = 0
-category_string = ""
-for count, value in enumerate(dataset.category):
+    names = ['title', 'category']
+    dataset = read_csv('data/titles_categories.csv', names=names)
 
-    # if new category, save current category string to dict
-    # with category (int) as key
-    if previous_category != value:
+    category_words_dict = {}
 
-        # avoid doing this on the first iter otherwise we get
-        # key error (0)
-        if value > 1:
-            # save concatenated string to dict
-            category_words_dict[previous_category] = category_string
-            # reset string with first string of next category
-            category_string = dataset.title[count]
+    # combine the titles from each category into a single string
+    previous_category = 0
+    category_string = ""
+    for count, value in enumerate(dataset.category):
 
-        previous_category = value
+        # if new category, save current category string to dict
+        # with category (int) as key
+        if previous_category != value:
 
-    else:
-        # concatenate the title into the category
-        category_string = category_string + " " + dataset.title[count]
+            # avoid doing this on the first iter otherwise we get
+            # key error (0)
+            if value > 1:
+                # save concatenated string to dict
+                category_words_dict[previous_category] = category_string
+                # reset string with first string of next category
+                category_string = dataset.title[count]
+
+            previous_category = value
+
+        else:
+            # concatenate the title into the category
+            category_string = category_string + " " + dataset.title[count]
+
+    return category_words_dict
 
 
 # https://www.machinelearningplus.com/nlp/cosine-similarity/
-def cosine_similarity_func(title, top_three=False):
+def cosine_similarity_func(title, top_three=False, maximum=False):
     """
     Input:
         A: a String which corresponds to a Title
@@ -55,9 +60,13 @@ def cosine_similarity_func(title, top_three=False):
         into a normalized unit where we can compare their projection angles into n-dimensional space
     """
 
+    # https://towardsdatascience.com/basics-of-countvectorizer-e26677900f9c
+    vectorizer = CountVectorizer(stop_words='english', max_df=1)
+
     # turn the title into a numeric vector
     vectorized_title = vectorizer.fit_transform([title])
 
+    category_words_dict = load_data_set()
     cosine_values_dict = {}
 
     for _, key in enumerate(category_words_dict):
@@ -69,39 +78,11 @@ def cosine_similarity_func(title, top_three=False):
 
         cosine_values_dict[key] = cosine_val
 
+    if maximum:
+        return max(cosine_values_dict, key=cosine_values_dict.get)
+
     if top_three:
         # return top three
         return sorted(cosine_values_dict, key=cosine_values_dict.get, reverse=True)[:3]
 
     return cosine_values_dict
-
-
-# test
-# returns
-
-# Load dataset
-names = ['title', 'category']
-dataset = read_csv('data/titles_categories.csv', names=names)
-
-total_records = 20114
-correct_count = 0
-skip_count = 0
-
-for index, row in dataset.iterrows():
-    try:
-        vectorizer.fit_transform([row.title])
-    except ValueError:
-        skip_count += 1
-        continue
-    guess_categories = cosine_similarity_func(row.title, True)
-    print("Top three guessed categories: ")
-    for i in guess_categories:
-        print(i)
-
-    print(" Actual category: " + str(row.category))
-    if row.category in guess_categories:
-        correct_count += 1
-
-accuracy_score = correct_count / (total_records - skip_count)
-
-print("Accuracy = " + str(accuracy_score))
