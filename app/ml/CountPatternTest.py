@@ -25,6 +25,7 @@ previous_category = 0
 # ToDo this **should** be a randomized sample
 limit_count_per_category = 15
 
+# for determining the overall accuracy
 total_records = limit_count_per_category * 18
 
 for index, row in dataset.iterrows():

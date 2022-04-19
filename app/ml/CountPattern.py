@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def load_data_set():
     """
-    combine the titles from each category into a single string
+    Combine the titles from each category into a single string
     :return: dictionary of category strings
     """
 
