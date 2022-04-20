@@ -24,6 +24,12 @@ def allowed_file(filename):
 
 
 def combine_results_with_proper_keys(result_dict):
+    """
+    Swap the integer keys for the actual categories so that the
+    data cane be easily used in Chart.js visualizations
+    :param result_dict: dictionary of results with integer keys
+    :return: dictionary of results with the Categories as keys
+    """
     merged = {}
 
     categories = {1: "Graphic Novels Anime-Manga, and Comics",
@@ -41,6 +47,9 @@ def combine_results_with_proper_keys(result_dict):
     return merged
 
 
+# the routes aren't too complex now, but we
+# probably should set up a Controller if
+# they get any bigger
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')

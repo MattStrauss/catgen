@@ -1,16 +1,21 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from pandas import read_csv
 from sklearn.metrics.pairwise import cosine_similarity
+import os
+from app import app
 
 
+# This can of course be static, but as we are still experimenting with
+# the dataset, I wanted to allow for quick changes
 def load_data_set():
     """
     Combine the titles from each category into a single string
     :return: dictionary of category strings
     """
 
+    dataset_path = os.path.join(app.root_path, "ml/data/titles_categories.csv")
     names = ['title', 'category']
-    dataset = read_csv('app/ml/data/titles_categories.csv', names=names)
+    dataset = read_csv(dataset_path, names=names)
 
     category_words_dict = {}
 
