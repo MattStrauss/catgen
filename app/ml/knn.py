@@ -4,6 +4,7 @@ import pickle
 import os
 from app import app
 
+# list that will hold image data, categories, etc.
 data_list = []
 
 
@@ -23,7 +24,7 @@ def load_data_set():
         rows, cols, colors = img.shape  # get dimensions for RGB array
         size = rows * cols * colors
         vector = img.reshape(size)
-        data_list.insert(0, [vector, size, row.category])
+        data_list.insert(0, [vector, img.shape, row.category])
 
 
 load_data_set()
@@ -38,3 +39,9 @@ with open('datalist.pickle', 'rb') as data:
 
 for index in loaded_data:
     print(index)
+
+# you can recover the original image with:
+# rows, cols, colors = img.shape
+# recovered_image = vector.reshape(rows,cols,colors)
+# plt.imshow(recovered_image) # followed by
+# plt.show() # to show you the second image.
