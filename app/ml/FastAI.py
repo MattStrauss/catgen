@@ -1,6 +1,21 @@
 # @author: hare2; Bryce S.;
 # Book Cover ML Algorithm by implementing pretrained model - FastAI
 
+"""
+Tutorial here (may use to enable GPU)
+https://medium.com/swlh/judging-a-book-by-its-cover-the-deep-learning-way-94847c7c1274
+
+Install OLDER version of FastAI on Spyder (https://fastai1.fast.ai/install.html)
+[make sure you have PyTorch]
+ pip install fastai==1.0.61
+[restart Spyder]
+
+
+Keep getting this error but ignoring it: serWarning: torch.solve is deprecated in favor of torch.linalg.solveand will be removed in a future PyTorch release.
+torch.linalg.solve has its arguments reversed and does not return the LU factorization.
+To get the LU factorization see torch.lu, which can be used with torch.lu_solve or torch.lu_unpack.
+"""
+
 from fastai.vision import *
 from pathlib import Path
 import pandas as pd
