@@ -37,11 +37,9 @@ with open('datalist.pickle', 'wb') as output:
 with open('datalist.pickle', 'rb') as data:
     loaded_data = pickle.load(data)
 
-for index in loaded_data:
-    print(index)
-
 # you can recover the original image with:
-# rows, cols, colors = img.shape
-# recovered_image = vector.reshape(rows,cols,colors)
-# plt.imshow(recovered_image) # followed by
-# plt.show() # to show you the second image.
+for index in loaded_data:
+    rows, cols, colors = index[1]
+    recovered_image = index[0].reshape(rows, cols, colors)
+    plt.imshow(recovered_image)
+    plt.show()
