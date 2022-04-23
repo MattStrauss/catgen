@@ -1,4 +1,5 @@
 # @author: hare2; Bryce S.;
+# Book Cover ML Algorithm by implementing pretrained model - FastAI
 
 from fastai.vision import *
 from pathlib import Path
