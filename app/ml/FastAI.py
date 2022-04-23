@@ -16,13 +16,11 @@ df.head()
 img_size = 256
 
 np.random.seed(90)
-data = (ImageList.from_df(df, "./")
-                    .split_by_rand_pct(0.2)
-                    .label_from_df()
-                    .transform(get_transforms(), size= img_size)
-                    .databunch(bs=6)
-                    )
-                    .normalize(imagenet_stats)
+data = (ImageList.from_df(df, p_path)
+                       .split_by_rand_pct(0.2)
+                       .label_from_df()
+                       .transform(get_transforms(), size= img_size)
+                       .databunch(bs=6)).normalize(imagenet_stats)
 data.show_batch()
 
 ############ Create Model ############
