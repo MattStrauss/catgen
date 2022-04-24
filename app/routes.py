@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from app import app
 
 from app.ml.CountPattern import cosine_similarity_func
+from app.ml.knn import get_neighbors
 
 UPLOAD_FOLDER = 'app/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -59,6 +60,7 @@ def index():
 def upload_file():
     # the returned result and categories list
     result = {}
+    knn_images = {}
     # get the submitted form data
     title = request.form.get('title')
     error = False
@@ -80,6 +82,8 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        knn_images = get_neighbors(file.filename, 3)
         flash("Here are the results!", 'success')
         result = cosine_similarity_func(title)
-    return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)))
+    return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)), title=title,
+                           images=knn_images)
