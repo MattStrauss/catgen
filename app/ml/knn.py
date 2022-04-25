@@ -50,12 +50,28 @@ def load_data_set():
 # load_data_set()
 
 # save generated data_list to pickle file
-#with open('datalist.pickle', 'wb') as output:
- #   pickle.dump(data_list, output)
+# with open('datalist.pickle', 'wb') as output:
+#   pickle.dump(data_list, output)
 
 # load data from pickle file
 with open('datalist.pickle', 'rb') as data:
     loaded_data = pickle.load(data)
+
+
+# turn the uploaded image into a vector for comparison
+def use_category_names(neighbors):
+    categories = {1: "Graphic Novels Anime-Manga, and Comics",
+                  2: "Transport, Travel, and Sport", 4: "Food and Drink", 5: "Home, Hobbies, and Crafts",
+                  6: "Computing and Video Games", 7: "Religion",
+                  8: "Literature, Poetry, and Plays", 9: "Humor", 10: "Language and Reference", 11: "Romance",
+                  12: "Biography", 13: "History",
+                  14: "Teen and Young Adult", 15: "Sci-Fi and Fantasy", 16: "Children",
+                  17: "Science, Psychology, and Self Help",
+                  18: "Crime, Mystery, and Thriller"}
+
+    for count, _ in enumerate(neighbors):
+        neighbors[count][2] = categories[neighbors[count][2]]
+    return neighbors
 
 
 # turn the uploaded image into a vector for comparison
@@ -86,4 +102,5 @@ def get_neighbors(uploaded_image, num_neighbors):
     neighbors = list()
     for i in range(num_neighbors):
         neighbors.append(distances[i][0])
-    return neighbors
+
+    return use_category_names(neighbors)
