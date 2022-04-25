@@ -7,7 +7,7 @@ import numpy as np
 
 # list that will hold image data, categories, etc.
 data_list = []
-pca_number = 15000
+pca_number = 20000
 
 
 def load_data_set():
@@ -21,7 +21,7 @@ def load_data_set():
     names = ['image', 'category']
     dataset = read_csv(dataset_path, names=names)
     previous_category = 0
-    limit_count_per_category = 10
+    limit_count_per_category = 200
     current_category_count = 0
 
     for i, row in dataset.iterrows():
@@ -46,11 +46,11 @@ def load_data_set():
             continue
 
 
-# load_data_set()
+#load_data_set()
 
 # save generated data_list to pickle file
-# with open('datalist.pickle', 'wb') as output:
-#   pickle.dump(data_list, output)
+#with open('datalist.pickle', 'wb') as output:
+    #pickle.dump(data_list, output)
 
 # load data from pickle file
 with open('datalist.pickle', 'rb') as data:
