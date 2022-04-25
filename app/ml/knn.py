@@ -9,6 +9,7 @@ import numpy as np
 data_list = []
 pca_number = 15000
 
+
 def load_data_set():
     """
     This should only happen once. We run through the entire dataset and store the created vectors, size and categories
@@ -16,23 +17,41 @@ def load_data_set():
     KNN algorithm on uploaded images to compare them to the vector dataset to find the nearest neighbors
     """
 
-    dataset_path = os.path.join(app.root_path, "ml/data/small_image_category_data.csv")
+    dataset_path = os.path.join(app.root_path, "ml/data/images_categories.csv")
     names = ['image', 'category']
     dataset = read_csv(dataset_path, names=names)
+    # combine the titles from each category into a single string
+    previous_category = 0
+    limit_count_per_category = 10
+    current_category_count = 0
 
     for i, row in dataset.iterrows():
-        img = plt.imread(str(row.image), 'jpg')
-        rows, cols, colors = img.shape  # get dimensions for RGB array
-        size = rows * cols * colors
-        vector = img.reshape(size)
-        data_list.insert(0, [vector, str(row.image), row.category])
+
+        if previous_category != row.category:
+            previous_category = row.category
+            current_category_count = 0
+
+        if limit_count_per_category > current_category_count:
+
+            try:
+                current_category_count += 1
+                img = plt.imread(str(row.image), 'jpg')
+                rows, cols, colors = img.shape  # get dimensions for RGB array
+                size = rows * cols * colors
+                vector = img.reshape(size)
+                data_list.insert(0, [vector, str(row.image), row.category])
+            except Exception as e:
+                print(e)
+                continue
+        else:
+            continue
 
 
-load_data_set()
+# load_data_set()
 
 # save generated data_list to pickle file
-with open('datalist.pickle', 'wb') as output:
-    pickle.dump(data_list, output)
+#with open('datalist.pickle', 'wb') as output:
+ #   pickle.dump(data_list, output)
 
 # load data from pickle file
 with open('datalist.pickle', 'rb') as data:
