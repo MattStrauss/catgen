@@ -6,6 +6,7 @@ import pickle
 
 
 def get_neighbors(image):
+    return_list = []
     # load image data from pickle file
     with open('datalist.pickle', 'rb') as data:
         loaded_data = pickle.load(data)
@@ -37,6 +38,7 @@ def get_neighbors(image):
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
         for row_number in row_numbers:
+            return_list.append(rows[row_number])
             print(rows[row_number])
 
 
