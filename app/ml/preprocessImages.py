@@ -1,19 +1,6 @@
-import os
-
-import cv2
-
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neighbors import NearestNeighbors
-from sklearn.model_selection import cross_val_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 from SimplePreprocessor import SimplePreprocessor
 from SimpleDatasetLoader import SimpleDatasetLoader
 import pandas as pd
-from matplotlib import pyplot as plt
-import csv
 import pickle
 
 
@@ -22,6 +9,14 @@ def load_data():
     This should only happen once. We run through the entire dataset and store the created vectors, size and categories
     into a list, which is saved to a `pickle` file. Then we load that data from the pickle file when needed to run the
     KNN algorithm on uploaded images to compare them to the vector dataset to find the nearest neighbors
+
+    This only runs once, so we did not commit the full image folder to source control. In order to run it, be sure
+    to follow the below three steps beforehand
+
+    1. Download images from https://www.kaggle.com/lukaanicin/book-covers-dataset
+    2. Put in same folder as code, rename  master folder to "dataset"
+        For example: "dataset/Humour/0000805.jpg")
+    3. Make sure modified_category.csv is in same folder as project
     """
     df = pd.read_csv("modified_category.csv")
     image_paths = list(df["image"].tolist())
