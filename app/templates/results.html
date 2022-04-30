@@ -7,7 +7,16 @@
     </div>
 
     <p class="text-2xl mt-6 mb-4">KNN Results:</p>
+
+    <div class="mb-10">
+        <p class="text-xl">Original Image</p>
+        <img src="{{ "static/uploads/" + original_image }}" class="object-contain h-48 w-30" alt="">
+    </div>
+
+
     <div class="grid grid-cols-3 gap-5 p-8">
+
+
 
         {% for image in images %}
 
@@ -15,7 +24,7 @@
               <p>Category: {{ image[1] }}</p>
             <img src="{{ image[0] }}" class="max-w-full h-auto" alt="">
           </div>
-            
+
         {% endfor %}
 
     </div>

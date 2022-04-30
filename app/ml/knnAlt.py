@@ -12,7 +12,7 @@ import pickle
 def get_neighbors(image, num_neighbors):
     return_list = []
     root_path = os.path.join(app.root_path, "ml/")
-    uploads_path = os.path.join(app.root_path, "uploads/")
+    uploads_path = os.path.join(app.root_path, "static/uploads/")
 
     # load image data from pickle file
     with open(root_path + "datalist.pickle", 'rb') as data:

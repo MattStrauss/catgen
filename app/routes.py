@@ -5,16 +5,14 @@ from flask import (
     render_template,
     redirect,
     request,
-    flash)
+    flash,
+    send_from_directory)
 from werkzeug.utils import secure_filename
-
 from app import app
-
 from app.ml.CountPattern import cosine_similarity_func
-# from app.ml.knn import get_neighbors
 from app.ml.knnAlt import get_neighbors
 
-UPLOAD_FOLDER = 'app/uploads'
+UPLOAD_FOLDER = 'app/static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
@@ -85,6 +83,11 @@ def results():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash("Here are the results!", 'success')
         result = cosine_similarity_func(title)
-        knn_images = get_neighbors(file.filename, 3)
+        knn_images = get_neighbors(file.filename, 8)
     return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)), title=title,
-                           images=knn_images)
+                           images=knn_images, original_image=file.filename)
+
+
+@app.route('/uploads/<filename>')
+def send_uploaded_file(filename=''):
+    return send_from_directory(UPLOAD_FOLDER, filename)
