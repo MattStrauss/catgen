@@ -9,20 +9,14 @@
     <p class="text-2xl mt-6 mb-4">KNN Results:</p>
     <div class="grid grid-cols-3 gap-5 p-8">
 
-          <div class="mb-4">
-              <p>Category: {{ images[0][2] }}</p>
-            <img src="{{ images[0][1] }}" class="max-w-full h-auto" alt="">
-          </div>
+        {% for image in images %}
 
           <div class="mb-4">
-              <p>Category: {{ images[1][2] }}</p>
-            <img src="{{ images[1][1] }}" class="max-w-full h-auto" alt="">
+              <p>Category: {{ image[1] }}</p>
+            <img src="{{ image[0] }}" class="max-w-full h-auto" alt="">
           </div>
-
-          <div class="mb-4">
-              <p>Category: {{ images[2][2] }}</p>
-            <img src="{{ images[2][1] }}" class="max-w-full h-auto" alt="">
-          </div>
+            
+        {% endfor %}
 
     </div>
 </div>

@@ -11,7 +11,8 @@ from werkzeug.utils import secure_filename
 from app import app
 
 from app.ml.CountPattern import cosine_similarity_func
-from app.ml.knn import get_neighbors
+# from app.ml.knn import get_neighbors
+from app.ml.knnAlt import get_neighbors
 
 UPLOAD_FOLDER = 'app/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -46,18 +47,6 @@ def combine_results_with_proper_keys(result_dict):
         merged[name] = result_dict[key]
 
     return merged
-
-
-# swap out the integer categories in the neighbors_list for their
-# respective category names
-def use_category_names(neighbors_list):
-    for row in neighbors_list:
-        # this fixes bug where category names are
-        # cached or something causing an index error
-        category = row[2]
-        if isinstance(category, int):
-            row[2] = categories[row[2]]
-    return neighbors_list
 
 
 # the routes aren't too complex now, but we
@@ -96,6 +85,6 @@ def results():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash("Here are the results!", 'success')
         result = cosine_similarity_func(title)
-        knn_images = use_category_names(get_neighbors(file.filename, 3))
+        knn_images = get_neighbors(file.filename, 3)
     return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)), title=title,
                            images=knn_images)
