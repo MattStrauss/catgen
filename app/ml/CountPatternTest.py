@@ -10,8 +10,8 @@ dataset = read_csv('data/titles_categories.csv', names=names)
 
 # total_records = 20114
 correct_count = 0
-top_three_run = True
-maximum_run = False
+top_three_run = False
+maximum_run = True
 category_accuracy_dict = {}
 
 # https://towardsdatascience.com/basics-of-countvectorizer-e26677900f9c
@@ -26,7 +26,7 @@ previous_category = 0
 limit_count_per_category = 15
 
 # for determining the overall accuracy
-total_records = limit_count_per_category * 18
+total_records = limit_count_per_category * 17
 
 for index, row in dataset.iterrows():
 

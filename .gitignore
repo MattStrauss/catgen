@@ -6,3 +6,4 @@ __pycache__
 .idea/
 .idea
 app/uploads
+app/static/uploads

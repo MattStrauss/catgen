@@ -5,17 +5,26 @@ from flask import (
     render_template,
     redirect,
     request,
-    flash)
+    flash,
+    send_from_directory)
 from werkzeug.utils import secure_filename
-
 from app import app
-
 from app.ml.CountPattern import cosine_similarity_func
+from app.ml.knnAlt import get_neighbors
 
-UPLOAD_FOLDER = 'app/uploads'
+UPLOAD_FOLDER = 'app/static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+
+categories = {1: "Graphic Novels Anime-Manga, and Comics",
+              2: "Transport, Travel, and Sport", 4: "Food and Drink", 5: "Home, Hobbies, and Crafts",
+              6: "Computing and Video Games", 7: "Religion",
+              8: "Literature, Poetry, and Plays", 9: "Humor", 10: "Language and Reference", 11: "Romance",
+              12: "Biography", 13: "History",
+              14: "Teen and Young Adult", 15: "Sci-Fi and Fantasy", 16: "Children",
+              17: "Science, Psychology, and Self Help",
+              18: "Crime, Mystery, and Thriller"}
 
 
 def allowed_file(filename):
@@ -32,15 +41,6 @@ def combine_results_with_proper_keys(result_dict):
     """
     merged = {}
 
-    categories = {1: "Graphic Novels Anime-Manga, and Comics",
-                  2: "Transport, Travel, and Sport", 4: "Food and Drink", 5: "Home, Hobbies, and Crafts",
-                  6: "Computing and Video Games", 7: "Religion",
-                  8: "Literature, Poetry, and Plays", 9: "Humor", 10: "Language and Reference", 11: "Romance",
-                  12: "Biography", 13: "History",
-                  14: "Teen and Young Adult", 15: "Sci-Fi and Fantasy", 16: "Children",
-                  17: "Science, Psychology, and Self Help",
-                  18: "Crime, Mystery, and Thriller"}
-
     for key, name in categories.items():
         merged[name] = result_dict[key]
 
@@ -56,9 +56,10 @@ def index():
 
 
 @app.route('/results', methods=['POST', 'GET'])
-def upload_file():
+def results():
     # the returned result and categories list
     result = {}
+    knn_images = {}
     # get the submitted form data
     title = request.form.get('title')
     error = False
@@ -82,4 +83,11 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash("Here are the results!", 'success')
         result = cosine_similarity_func(title)
-    return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)))
+        knn_images = get_neighbors(file.filename, 8)
+    return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)), title=title,
+                           images=knn_images, original_image=file.filename)
+
+
+@app.route('/uploads/<filename>')
+def send_uploaded_file(filename=''):
+    return send_from_directory(UPLOAD_FOLDER, filename)
