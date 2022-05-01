@@ -46,9 +46,5 @@ def get_neighbors(image, num_neighbors):
         rows = list(csv_reader)
         for row_number in row_numbers:
             return_list.append(rows[row_number])
-            #print(rows[row_number])
-
-        for i in return_list:
-            print(i)
 
     return return_list
