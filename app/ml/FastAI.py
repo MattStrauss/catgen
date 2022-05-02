@@ -29,7 +29,7 @@ def init_resnet():
         df = pd.read_csv("modified_category.csv")
         df.head()
         
-        img_size = 100
+        img_size = 150
         
         np.random.seed(90)
         data = (ImageList.from_df(df, r"C:\Users\hare2\OneDrive\Desktop\ML & Data Sci\Final Project Demos\archive")
@@ -59,7 +59,7 @@ def init_resnet():
         print("Training model...")
         
         #params are number of epochs and learning rate
-        learn.fit(8, 0.005)
+        learn.fit(10, 0.005)
         
  
         print("Evaluating...")
@@ -76,7 +76,7 @@ def init_resnet():
     
         # plotting the top losses
         interp.plot_top_losses(6, figsize=(25,25))
-        learn.export(root = Path("."))
+        learn.export()
     
 def get_prediction(image_path):
     #root_path = os.path.join(app.root_path, "ml/")
@@ -87,5 +87,5 @@ def get_prediction(image_path):
     print(prediction)
     return prediction
 
-init_resnet()
+#init_resnet()
 #get_prediction(r"C:\Users\hare2\OneDrive\Desktop\CountMonteCristo.jpg")
