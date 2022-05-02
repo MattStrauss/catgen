@@ -86,8 +86,3 @@ def results():
         knn_images = get_neighbors(file.filename, 8)
     return render_template('results.html', result=json.dumps(combine_results_with_proper_keys(result)), title=title,
                            images=knn_images, original_image=file.filename)
-
-
-@app.route('/uploads/<filename>')
-def send_uploaded_file(filename=''):
-    return send_from_directory(UPLOAD_FOLDER, filename)

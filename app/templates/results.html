@@ -21,7 +21,7 @@
         {% for image in images %}
 
           <div class="mb-4">
-              <p>Category: {{ image[1] }}</p>
+              <p>Category: {{ image[1].split(" ", 1)[1] }}</p>
             <img src="{{ image[0] }}" class="max-w-full h-auto" alt="">
           </div>
 
